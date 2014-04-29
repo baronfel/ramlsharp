@@ -1,4 +1,4 @@
-﻿module Parameters
+﻿module Model.Parameters
 
 open Common
 
@@ -50,10 +50,10 @@ let CreateDefaultUriParameter name =
     let defaultUriParamType = 
         Some (String (Some defaultUriParams, None))
 
-    let p = {
+    let prm = {
         displayName = Some name
         name = name
         description = None
         paramType = defaultUriParamType
     }
-    p
+    prm

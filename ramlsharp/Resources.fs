@@ -1,4 +1,4 @@
-﻿module Resources
+﻿module Model.Resources
 
 open Parameters
 open Common
@@ -44,7 +44,7 @@ type Method = {
     protocols : ProtocolType list option // overrides the protocols set at an API level, for this method only
     queryParameters : Map<string, NamedParameter> option
     body : BodyMap option // how can we make the value more....strong?
-    responses : Map<HttpStatusCode, Response> option
+    responses : Map<HttpStatusCode.T, Response> option
 }
 
 type Resource = {

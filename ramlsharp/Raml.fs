@@ -1,4 +1,4 @@
-﻿module Raml
+﻿module Model.Raml
 
 open Resources
 open Parameters
@@ -6,9 +6,9 @@ open Common
 
 //TODO: resource types and traits are crazy, yo!
 type RamlDefinition = {
-    title : string // yay, required!
+    title : string
     version : string option // don't use if your API isn't versioned, or if the API definition itself doesn't change.
-    baseUri : string // required, and would be nice to force FRC2396/RFC6570 compliance
+    baseUri : UriString // required, and would be nice to force FRC2396/RFC6570 compliance
     baseUriParameters : Map<string, UriParameter> option // param name to param details.
     protocols : ProtocolType list option // if not specified, infer from the baseUri
     mediaType : MediaType option

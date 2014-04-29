@@ -1,1 +1,4 @@
 packages
+ramlsharp/bin
+ramlsharp/obj
+*.suo
