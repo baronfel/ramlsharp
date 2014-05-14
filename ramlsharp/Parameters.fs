@@ -1,5 +1,5 @@
-﻿module Model.Parameters
 
+namespace ramlsharp.model
 open Common
 
 type StringParams = {
@@ -32,28 +32,8 @@ type ParameterType =
 type NamedParameter = {
     displayName : string option // defaults to the key (the name of the property itself)
     name : string
-    description : MarkdownString.T option
+    description : MarkdownString option
     paramType : ParameterType option // default to string if None
 }
 
-type UriParameter = NamedParameter 
-
-
-let defaultUriParams = {
-    example = None
-    repeat = None
-    required = Some true // UriParams should always be required
-    propDefault = None
-}
-
-let CreateDefaultUriParameter name =
-    let defaultUriParamType = 
-        Some (String (Some defaultUriParams, None))
-
-    let prm = {
-        displayName = Some name
-        name = name
-        description = None
-        paramType = defaultUriParamType
-    }
-    prm
+type UriParameter = NamedParameter

@@ -1,8 +1,7 @@
-﻿module Model.Raml
+namespace ramlsharp.model
 
-open Resources
-open Parameters
 open Common
+open Resources
 
 //TODO: resource types and traits are crazy, yo!
 type RamlDefinition = {

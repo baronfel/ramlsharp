@@ -1,8 +1,6 @@
-﻿module Model.Resources
+namespace ramlsharp.model
 
-open Parameters
 open Common
-open MarkdownString
 
 type Schema = Schema of string
 
@@ -18,7 +16,7 @@ type ExampleOfSchemaType<'a> = {
 
 type UserDocumentation = {
     title : string
-    content : ItemOrInclude<MarkdownString.T> // can be an !incluuuude...
+    content : ItemOrInclude<MarkdownString> // can be an !incluuuude...
 }
 
 type ResourcePath = ResourcePath of string
@@ -39,7 +37,7 @@ type Response = {
 }
 
 type Method = {
-    description : MarkdownString.T option
+    description : MarkdownString option
     headers : Map<HeaderName, NamedParameter> option
     protocols : ProtocolType list option // overrides the protocols set at an API level, for this method only
     queryParameters : Map<string, NamedParameter> option
