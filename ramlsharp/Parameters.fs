@@ -1,6 +1,4 @@
-
 namespace ramlsharp.model
-open Common
 
 type StringParams = {
     enum : string list option // if this is defined, then input value must be in this list. if not in list, ERROR,

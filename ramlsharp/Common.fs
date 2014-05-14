@@ -47,25 +47,24 @@ module HttpStatusCode =
         value
     
 
-module Common = 
-    type UriString = UriString of string
+type UriString = UriString of string
 
-    type HttpMethod = OPTIONS | GET | HEAD | POST | PUT | DELETE | TRACE | CONNECT | PATCH
+type HttpMethod = OPTIONS | GET | HEAD | POST | PUT | DELETE | TRACE | CONNECT | PATCH
 
-    type MediaType = Xml of string | Json of string// todo: validation per spec
+type MediaType = Xml of string | Json of string// todo: validation per spec
 
-    type Include<'a> = {
-        path : string
-        content : 'a
-    }
+type Include<'a> = {
+    path : string
+    content : 'a
+}
 
-    type ItemOrInclude<'a> = 
-        Item of 'a // we can just have the thing
-        | Include of Include<'a> // we can use a !include to reference some relative path
-        | RootReference of string // we can refer to a collection held in a parent or root node by key
+type ItemOrInclude<'a> = 
+    Item of 'a // we can just have the thing
+    | Include of Include<'a> // we can use a !include to reference some relative path
+    | RootReference of string // we can refer to a collection held in a parent or root node by key
 
-    type ProtocolType = HTTP | HTTPS
+type ProtocolType = HTTP | HTTPS
 
-    type CreateResult<'a> = Success of 'a | Error of string
+type CreateResult<'a> = Success of 'a | Error of string
 
-    type MarkdownString = String of string
+type MarkdownString = String of string

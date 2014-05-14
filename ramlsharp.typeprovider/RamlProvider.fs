@@ -23,10 +23,7 @@ type RamlProvider(config : TypeProviderConfig) as this =
         instantiationFunction = (fun typeName paramValues ->
             // ok, so given this uri we need to GET the input
             let uri = paramValues.[0].ToString()
-            let client = new HttpClient()
-            let content = client.GetStringAsync(uri).Result // be nice to make this async?
-
-            let ramlContent = Parser.Load content
+            let ramlContent = RamlParser.LoadUri uri
 
             let constructedType = ProvidedTypeDefinition(thisAssembly, namespaceName, "RamlApi", Some baseType)
             constructedType

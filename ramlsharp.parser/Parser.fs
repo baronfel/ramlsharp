@@ -1,17 +1,14 @@
-﻿namespace ramlsharp.parser
+﻿module parser
 
-open ramlsharp.model
+open FParsec
+open AST
 
-module Parser=
-    let Load text =
-        {
-            baseUri = "test.com"
-            title = "test"
-            version = Some "1.2"
-            baseUriParameters = None
-            protocols = None
-            mediaType = None
-            schemas = None
-            documentation = None
-            resources = List.empty
-        }
+let ws = spaces
+let str s = pstring s
+
+let uri : Parser<Raml,unit> = skipString "baseUri: " >>. restOfLine true |>> BaseUri
+let ramlTitle : Parser<Raml,unit> = skipString "title: " >>. restOfLine true |>> Title
+let ramlVer : Parser<Raml,unit> = skipString "%#RAML " >>. pfloat |>> Version
+let ramlDef = ramlVer // will incrementally expand this definition to include the rest
+
+let raml = ws >>. ramlDef .>> ws .>> eof

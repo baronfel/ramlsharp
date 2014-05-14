@@ -1,7 +1,5 @@
 namespace ramlsharp.model
 
-open Common
-
 type Schema = Schema of string
 
 type TypedSchema<'a> = {

@@ -1,8 +1,5 @@
 namespace ramlsharp.model
 
-open Common
-open Resources
-
 //TODO: resource types and traits are crazy, yo!
 type RamlDefinition = {
     title : string
