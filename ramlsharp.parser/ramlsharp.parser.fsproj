@@ -63,6 +63,8 @@
     <Compile Include="AST.fs" />
     <Compile Include="parser.fs" />
     <Compile Include="RamlParser.fs" />
+    <None Include="full.raml" />
+    <None Include="partial.raml" />
     <None Include="Script1.fsx" />
     <None Include="packages.config" />
     <None Include="app.config" />

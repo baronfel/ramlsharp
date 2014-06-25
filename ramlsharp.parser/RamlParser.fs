@@ -9,10 +9,13 @@ open AST
 
 module RamlParser =
     let private load text =
+        printfn "load text: %s" text
         let result = runParserOnString parser.raml () "meh" text
         match result with
-        | Success (raml, _, _) -> raml
-        | Failure (raml, userstate, endpos) -> failwith (sprintf "failed reading RAML. got to pos %s" (endpos.ToString()))
+        | Success (raml, _, _) -> printfn "success %A" raml; raml
+        | Failure (raml, userstate, endpos) -> 
+            printfn "failed. text was %s" text
+            failwith "failed reading RAML."
 
     /// <summary>
     /// This is intended to be the main entry point for the parser.  
@@ -21,6 +24,7 @@ module RamlParser =
     /// <param name="path">the local path to the raml file</param>
     let LoadFile path = 
         let contents = File.ReadAllText path
+        printfn "contents: %s" contents
         load contents
 
     /// <summary>

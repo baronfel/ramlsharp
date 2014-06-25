@@ -6,9 +6,25 @@ open AST
 let ws = spaces
 let str s = pstring s
 
-let baseUri : Parser<Raml,unit> = skipString "baseUri: " >>. restOfLine true |>> BaseUri
-let title : Parser<Raml,unit> = skipString "title: " >>. restOfLine true |>> Title
-let ramlVer : Parser<Raml,unit> = skipString "%#RAML " >>. pfloat |>> Version
-let ramlDef = ramlVer .>> title .>> baseUri // will incrementally expand this definition to include the rest
+let getProtocol s = 
+    match s with
+    | "http" -> Http
+    | "https" -> Https
+    | _ -> failwith "protocol not supported"
 
-let raml = ws >>. ramlDef .>> ws .>> eof
+//let protocol : Parser<Protocol, unit> = str .<< (ws >>. str ":" .<< ws) |>> getProtocol
+//
+//let baseUri : Parser<BaseUri,unit> = skipString "baseUri: " >>. str .>> followedBy ":" 
+let title : Parser<string,unit> = skipString "title: " >>. restOfLine true
+let ramlVer : Parser<float,unit> = skipString "#%RAML " >>. pfloat .>> restOfLine true
+
+let makeObj version title = // uri =
+    printfn "making raml with version %f and title %s" version title
+    {
+        title = title
+        version = version
+        //baseUri = uri
+        baseUri = defaultBaseUri
+    }
+
+let raml = pipe2 ramlVer title makeObj
