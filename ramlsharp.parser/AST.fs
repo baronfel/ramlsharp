@@ -1,23 +1,22 @@
 ﻿module AST
 
-type ParameterType = 
-    | String
-    | Number
-
 type Protocol = Http|Https
 
 type Parameter = 
-    |Name of string
-    |Type of ParameterType
+    | Undetermined of string 
+    | String of string
+    | Number of string 
 
 type BaseUri = {
-    protocol : Protocol 
-    domain : string
-    routeParams : Parameter list
+    protocol : Protocol  // http/https
+    domain : string // example.what.com
+    staticRoutes : string list  // /api/test/etc Assumption: that these static parts will ALWAYS be before any parameters
+    routeParams : Parameter list // /{version}/{resource}
 }
 let defaultBaseUri = {
     protocol = Http
     domain  = ""
+    staticRoutes = List.empty
     routeParams = List.empty
 }
 
