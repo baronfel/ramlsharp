@@ -1,6 +1,5 @@
 ﻿namespace ramlsharp.typeprovider
 
-open ramlsharp.model
 open ramlsharp.parser
 open Microsoft.FSharp.Core.CompilerServices
 open Samples.FSharp.ProvidedTypes
@@ -13,7 +12,7 @@ type RamlProvider(config : TypeProviderConfig) as this =
     inherit TypeProviderForNamespaces()
     let namespaceName = "ramlsharp.model"
     let thisAssembly = Assembly.GetExecutingAssembly()
-    let baseType = typeof<RamlDefinition>
+    let baseType = typeof<AST.RamlDef>
     let staticParams = [ProvidedStaticParameter("uriSource", typeof<string>)] // point us at a URI we can HTTP GET
     
     let ramlType = ProvidedTypeDefinition(thisAssembly, namespaceName, "RamlApi", Some baseType)

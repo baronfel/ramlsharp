@@ -1,6 +1,5 @@
 ﻿namespace ramlsharp.parser
 
-open ramlsharp.model
 open System.IO
 open System.Net.Http
 
@@ -42,5 +41,5 @@ module RamlParser =
     /// You give me a raml definition, and I give you the formatted string output
     /// </summary>
     /// <param name="def"></param>
-    let Dump (def:ramlsharp.model.RamlDefinition) =
+    let Dump (def:RamlDef) =
         System.String.Empty
