@@ -75,12 +75,23 @@ module TestHarness =
 
         [<Test>]
         member x.``can parse several route parameters in a row``()=
-            let text = "/{version}/{other}/"
+            let text = "{version}/{other}/"
             let success pars =
                 pars |> List.length |> should equal 2
                 pars |> should equal [Parameter.Undetermined "version"; Parameter.Undetermined "other"]
 
-            runWithCont (many  parser.routeParamParser) text success generalErrString
+            runWithCont parser.lotsOfRouteParams text success generalErrString
+    
+    [<TestFixture>]
+    type ``given a protocol``()=
+        [<Test>]
+        member x.``can parse http``()=
+            
+            runWithCont parser.protocolParser "http" (generalSuccess Protocol.Http) generalErrString
+
+        [<Test>]
+        member x.``can parse https``()=
+            runWithCont parser.protocolParser "https" (generalSuccess Protocol.Https) generalErrString
 
     [<TestFixture>]
     type ``given a base uri string`` ()=
