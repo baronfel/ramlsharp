@@ -13,6 +13,7 @@ let advanceToEOL = restOfLine true
 let routeParamParser : Parser<Parameter, unit> = between (str "{") (str "}")  (manySatisfy (fun c -> c <> '}')) |>> Parameter.Undetermined
 let staticRouteParser : Parser<string, unit> = getAllUntilNext "/" true // either go until a slash or, if we're at the end of the line, grab the rest of the line
 let lotsOfRouteParams : Parser<Parameter list, unit> = sepEndBy routeParamParser (str "/")
+
 // PROTOCOLS
 let httpParser =  stringReturn "http" Protocol.Http
 let httpsParser  =  stringReturn "https" Protocol.Https
@@ -29,19 +30,20 @@ let makeUri p d =
 let isSlashOrNewline c =
     c <> '/' && c<> '\n'
 
-let domainParser = between (str "://") (str "/") (many1Satisfy (fun c ->  not (isSlashOrNewline c)))
+let domainParser = between (str "://") (str "/") (manySatisfy (fun c ->  not (isSlashOrNewline c)))
 let baseUri = skipString "baseUri:" >>. ws >>. pipe2 protocolParser domainParser makeUri 
 
 // SIMPLE RAML PROPERTIES
 let title = skipString "title:" >>. ws >>. advanceToEOL
-let versionSentinel = skipString "#%RAML"
-let ramlVer = versionSentinel .>> ws >>. pfloat .>> advanceToEOL
+let apiVersion = opt (skipString "version:" >>. ws >>. advanceToEOL) // api version isn't guaranteed, so....
+let ramlVer = skipString "#%RAML" .>> ws >>. pfloat .>> advanceToEOL
 
-let makeRamlDef version title uri = 
+let makeRamlDef ramlVersion title apiVersion uri = 
     {
-        version = version
+        ramlVersion = ramlVersion
         title = title
+        apiVersion = apiVersion
         baseUri = uri
     }
 
-let raml : Parser<RamlDef, unit> = pipe3 ramlVer title baseUri makeRamlDef
+let raml : Parser<RamlDef, unit> = pipe4 ramlVer title apiVersion baseUri makeRamlDef

@@ -20,13 +20,9 @@ let defaultBaseUri = {
     routeParams = List.empty
 }
 
-type Raml = 
-    | Version of float
-    | Title of string
-    | BaseUri of string // whole uri
-
 type RamlDef = {
-    version : float
+    ramlVersion : float
+    apiVersion : string option
     title : string
     baseUri : BaseUri
 }

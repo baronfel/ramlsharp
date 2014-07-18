@@ -29,7 +29,7 @@ module TestHarness =
             uri.routeParams |> List.length |> should be (greaterThan 0)
 
         let verifyDef (r:RamlDef) =
-            r.version |> should equal 0.8
+            r.ramlVersion |> should equal 0.8
             r.title |> should equal "World Music API"
             r.baseUri |> verifyBaseUri
             
@@ -141,3 +141,15 @@ module TestHarness =
             }
 
             runWithCont parser.baseUri uri (generalSuccess expected) generalErrString
+
+    [<TestFixture>]
+    type ``given an optional api version`` ()=
+        [<Test>]
+        member x.``if present, can parse version``()=
+            let version = "version: v1.1"
+            runWithCont parser.apiVersion version (generalSuccess (Some "v1.1")) generalErrString
+
+        [<Test>]
+        member x.``if not present, can parse version``()=
+            let version = ""
+            runWithCont parser.apiVersion version (generalSuccess None) generalErrString
