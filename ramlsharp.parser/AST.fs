@@ -20,9 +20,14 @@ let defaultBaseUri = {
     routeParams = List.empty
 }
 
+type Trait = {
+    name : string
+}
+
 type RamlDef = {
     ramlVersion : float
     apiVersion : string option
     title : string
     baseUri : BaseUri
+    traits : Trait list
 }

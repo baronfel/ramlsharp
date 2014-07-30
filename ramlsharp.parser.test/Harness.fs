@@ -7,8 +7,8 @@ open FParsec
 open AST
 
 module TestHarness =
-    let runWithCont parser input successCont failureFormat =
-        match run parser input with
+    let runWithCont parser context input successCont failureFormat =
+        match runParserOnString parser context "test" input with
         | Success (result, userstate, position) -> successCont result
         | Failure (errStr, err, userstate) -> Assert.Fail((failureFormat errStr err userstate))
 
@@ -40,7 +40,7 @@ module TestHarness =
                 verifyDef a
                 printfn "%A" a 
                 
-            runWithCont parser.raml text success generalErrString
+            runWithCont parser.raml parser.WhitespaceContext.Default text success generalErrString
 
 
     [<TestFixture>]
@@ -53,7 +53,7 @@ module TestHarness =
             let success a =
                 should (equalWithin 0.1) v a
 
-            runWithCont parser.ramlVer versionStr success generalErrString
+            runWithCont parser.ramlVer parser.WhitespaceContext.Default versionStr success generalErrString
             
 
     [<TestFixture>]
@@ -63,7 +63,7 @@ module TestHarness =
             let t = "World Music API"
             let text = sprintf "title: %s" t   
 
-            runWithCont parser.title text (generalSuccess t) generalErrString
+            runWithCont parser.title parser.WhitespaceContext.Default text (generalSuccess t) generalErrString
 
     [<TestFixture>]
     type ``given a route param``()=
@@ -71,7 +71,7 @@ module TestHarness =
         member x.``can parse that route param`` ()=
             let text = "{version}" // this is what's left from a baseuri after we get the protocol and domain
             let expected = Parameter.Undetermined "version"
-            runWithCont parser.routeParamParser text (generalSuccess expected) generalErrString
+            runWithCont parser.routeParamParser parser.WhitespaceContext.Default text (generalSuccess expected) generalErrString
 
         [<Test>]
         member x.``can parse several route parameters in a row``()=
@@ -80,18 +80,18 @@ module TestHarness =
                 pars |> List.length |> should equal 2
                 pars |> should equal [Parameter.Undetermined "version"; Parameter.Undetermined "other"]
 
-            runWithCont parser.lotsOfRouteParams text success generalErrString
+            runWithCont parser.lotsOfRouteParams parser.WhitespaceContext.Default text success generalErrString
     
     [<TestFixture>]
     type ``given a protocol``()=
         [<Test>]
         member x.``can parse http``()=
             
-            runWithCont parser.protocolParser "http" (generalSuccess Protocol.Http) generalErrString
+            runWithCont parser.protocolParser parser.WhitespaceContext.Default "http" (generalSuccess Protocol.Http) generalErrString
 
         [<Test>]
         member x.``can parse https``()=
-            runWithCont parser.protocolParser "https" (generalSuccess Protocol.Https) generalErrString
+            runWithCont parser.protocolParser parser.WhitespaceContext.Default "https" (generalSuccess Protocol.Https) generalErrString
 
     [<TestFixture>]
     type ``given a base uri string`` ()=
@@ -104,7 +104,7 @@ module TestHarness =
                 staticRoutes = List.empty
                 routeParams = List.empty
             }
-            runWithCont parser.baseUri uri (generalSuccess expected) generalErrString
+            runWithCont parser.baseUri parser.WhitespaceContext.Default uri (generalSuccess expected) generalErrString
 
         [<Test>]
         member x.``can parse a standard uri string with slash``()=
@@ -116,7 +116,7 @@ module TestHarness =
                 routeParams = List.empty
             }
 
-            runWithCont parser.baseUri uri (generalSuccess expected) generalErrString
+            runWithCont parser.baseUri parser.WhitespaceContext.Default uri (generalSuccess expected) generalErrString
         
         [<Test>]
         member x.``can parse a uri with a route param``()=
@@ -128,7 +128,7 @@ module TestHarness =
                 routeParams = [Parameter.Undetermined "version"]
             }
 
-            runWithCont parser.baseUri uri (generalSuccess expected) generalErrString
+            runWithCont parser.baseUri parser.WhitespaceContext.Default uri (generalSuccess expected) generalErrString
 
         [<Test>]
         member x.``can parse a baseuri with a static route before params``()=
@@ -140,16 +140,16 @@ module TestHarness =
                 routeParams = [Parameter.Undetermined "version"]
             }
 
-            runWithCont parser.baseUri uri (generalSuccess expected) generalErrString
+            runWithCont parser.baseUri parser.WhitespaceContext.Default uri (generalSuccess expected) generalErrString
 
     [<TestFixture>]
     type ``given an optional api version`` ()=
         [<Test>]
         member x.``if present, can parse version``()=
             let version = "version: v1.1"
-            runWithCont parser.apiVersion version (generalSuccess (Some "v1.1")) generalErrString
+            runWithCont parser.apiVersion parser.WhitespaceContext.Default version (generalSuccess (Some "v1.1")) generalErrString
 
         [<Test>]
         member x.``if not present, can parse version``()=
             let version = ""
-            runWithCont parser.apiVersion version (generalSuccess None) generalErrString
+            runWithCont parser.apiVersion parser.WhitespaceContext.Default version (generalSuccess None) generalErrString

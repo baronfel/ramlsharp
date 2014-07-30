@@ -9,7 +9,7 @@ open AST
 module RamlParser =
     let private load text =
         printfn "load text: %s" text
-        let result = runParserOnString parser.raml () "meh" text
+        let result = runParserOnString parser.raml parser.WhitespaceContext.Default "meh" text
         match result with
         | Success (raml, _, _) -> printfn "success %A" raml; raml
         | Failure (raml, userstate, endpos) -> 
